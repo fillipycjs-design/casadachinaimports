@@ -95,12 +95,17 @@ function cadastrar() {
     if (editIndex === "") {
 
         // VERIFICA DUPLICIDADE
-        if (estoque.some(item => item.imei === imei)) {
+       if (
+    estoque.some((item, i) =>
+        item.imei === imei &&
+        i != editIndex
+    )
+) {
 
-            alert("❌ IMEI já cadastrado.");
-            return;
+    alert("❌ IMEI já cadastrado.");
+    return;
 
-        }
+}
 
         estoque.push(produto);
 
@@ -116,9 +121,26 @@ function cadastrar() {
             status: itemAntigo.status,
             dataVenda: itemAntigo.dataVenda,
             clienteNome: itemAntigo.clienteNome,
-            precoVenda: itemAntigo.precoVenda,
-            lucro: itemAntigo.lucro,
-            margemLucro: itemAntigo.margemLucro
+            precoVenda: document.getElementById('venda-preco').value || itemAntigo.precoVenda,
+           lucro: (
+    parseFloat(document.getElementById('venda-preco').value || itemAntigo.precoVenda || 0)
+    -
+    parseFloat(precoCusto || 0)
+),
+
+margemLucro: precoCusto > 0
+    ? (
+        (
+            (
+                parseFloat(document.getElementById('venda-preco').value || itemAntigo.precoVenda || 0)
+                -
+                parseFloat(precoCusto || 0)
+            )
+            /
+            parseFloat(precoCusto || 0)
+        ) * 100
+    ).toFixed(1)
+    : 0
 
         };
 
@@ -311,8 +333,19 @@ function listar() {
                         </span>
 
                     </td>
-
-                    <td>
+<td>
+ <button
+        onclick="prepararEdicao(${index})"
+        style="
+            background:#ffc107;
+            border:none;
+            border-radius:4px;
+            padding:5px;
+            cursor:pointer;
+            margin-right:5px;
+        ">
+        ✏️
+    </button>
 
                         <button
                             onclick="excluirItem(${index})"
@@ -417,27 +450,56 @@ function prepararEdicao(index) {
 
     const item = estoque[index];
 
+    // CONTROLE
     document.getElementById('edit-index').value = index;
+
+    // PRODUTO
     document.getElementById('marca').value = item.marca;
     document.getElementById('modelo').value = item.modelo;
     document.getElementById('imei').value = item.imei;
     document.getElementById('cor').value = item.cor;
     document.getElementById('armazenamento').value = item.armazenamento;
     document.getElementById('ram').value = item.ram;
-    document.getElementById('preco-custo').value = item.precoCusto || 0;
-    document.getElementById('preco').value = item.preco;
-    document.getElementById('fornecedor').value = item.fornecedor;
 
+    // PREÇOS
+    document.getElementById('preco-custo').value =
+        item.precoCusto || 0;
+
+    document.getElementById('preco').value =
+        item.preco || 0;
+
+    // FORNECEDOR
+    document.getElementById('fornecedor').value =
+        item.fornecedor || "";
+
+    // =========================
+    // DADOS DA VENDA
+    // =========================
+
+    if (item.status === 'Vendido') {
+
+        document.getElementById('venda-imei').value =
+            item.imei || "";
+
+        document.getElementById('cliente-nome').value =
+            item.clienteNome || "";
+
+        document.getElementById('venda-preco').value =
+            item.precoVenda || 0;
+
+    }
+
+    // BOTÃO
     document.getElementById('btn-cadastrar').innerText =
         "Salvar Alterações";
 
+    // SCROLL
     window.scrollTo({
         top: 0,
         behavior: 'smooth'
     });
 
 }
-
 // ===============================
 // EXCLUIR
 // ===============================
@@ -461,17 +523,24 @@ function autoPreencher() {
     const imei = document.getElementById('venda-imei').value.trim();
 
     const produto = estoque.find(item =>
-        item.imei === imei &&
-        item.status === 'Disponível'
-    );
+        item.imei === imei  );
 
     if (produto) {
 
-        document.getElementById('venda-marca').value = produto.marca;
-        document.getElementById('venda-modelo').value = produto.modelo;
-        document.getElementById('venda-cor').value = produto.cor;
-        document.getElementById('venda-armazenamento').value = produto.armazenamento;
-        document.getElementById('venda-ram').value = produto.ram;
+        document.getElementById('venda-marca').value =
+            produto.marca || "";
+
+        document.getElementById('venda-modelo').value =
+            produto.modelo || "";
+
+        document.getElementById('venda-cor').value =
+            produto.cor || "";
+
+        document.getElementById('venda-armazenamento').value =
+            produto.armazenamento || "";
+
+        document.getElementById('venda-ram').value =
+            produto.ram || "";
 
     } else {
 
