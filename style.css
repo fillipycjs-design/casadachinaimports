@@ -228,3 +228,28 @@ tr:hover {
         text-align: center;
     }
 }
+/* ========================= */
+/* SCANNER DE IMEI */
+/* ========================= */
+
+#abrir-camera{
+    background:#e60000;
+    color:white;
+    border:none;
+    padding:12px;
+    border-radius:8px;
+    cursor:pointer;
+    width:100%;
+    margin-top:10px;
+    font-weight:bold;
+}
+
+#abrir-camera:hover{
+    opacity:0.9;
+}
+
+#reader{
+    border-radius:10px;
+    overflow:hidden;
+    margin-top:10px;
+}
