@@ -98,9 +98,10 @@ function cadastrar() {
        if (
     estoque.some((item, i) =>
         item.imei === imei &&
-        i != editIndex
+        i != Number(editIndex)
     )
-) {
+)
+ {
 
     alert("❌ IMEI já cadastrado.");
     return;
@@ -110,6 +111,17 @@ function cadastrar() {
         estoque.push(produto);
 
     } else {
+  // NÃO PERMITE TROCAR PARA IMEI JÁ EXISTENTE
+    if (
+        estoque.some((item, i) =>
+            item.imei === imei &&
+            i !== Number(editIndex)
+        )
+){
+
+        alert("❌ Este IMEI já pertence a outro aparelho.");
+        return;
+}
 
         // EDIÇÃO
         const itemAntigo = estoque[editIndex];
@@ -199,7 +211,11 @@ function vender() {
     estoque[index].dataVenda = new Date().toLocaleDateString('pt-BR');
     estoque[index].lucro = lucro;
     estoque[index].margemLucro = margemLucro;
+estoque[index].formaPagamento =
+    document.getElementById('forma-pagamento').value;
 
+estoque[index].parcelas =
+    document.getElementById('parcelas').value || 1;
     salvar();
     limparForm('form-venda');
 
