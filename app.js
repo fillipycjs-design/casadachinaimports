@@ -32,8 +32,9 @@ function cadastrar() {
     const modelo = document.getElementById('modelo').value.trim();
     const imei = document.getElementById('imei').value.trim();
     const preco = document.getElementById('preco').value;
+    const precoCusto = document.getElementById('preco-custo').value;
 
-    if (!marca || !modelo || !imei || !preco) {
+    if (!marca || !modelo || !imei || !precoCusto) {
         alert("⚠️ Preencha os campos obrigatórios.");
         return;
     }
@@ -46,6 +47,7 @@ function cadastrar() {
         armazenamento: document.getElementById('armazenamento').value,
         ram: document.getElementById('ram').value,
         preco,
+	precoCusto,
         fornecedor: document.getElementById('fornecedor').value.trim(),
         data: new Date().toLocaleDateString('pt-BR'),
         status: 'Disponível'
@@ -66,7 +68,9 @@ function cadastrar() {
             status: itemAntigo.status, 
             dataVenda: itemAntigo.dataVenda,
             clienteNome: itemAntigo.clienteNome,
-            precoVenda: itemAntigo.precoVenda 
+            precoVenda: itemAntigo.precoVenda, 
+ 	    lucro: itemAntigo.lucro,
+    	    margemLucro: itemAntigo.margemLucro
         };
         document.getElementById('edit-index').value = "";
         document.getElementById('btn-cadastrar').innerText = "Cadastrar";
@@ -95,12 +99,19 @@ function vender() {
         alert("❌ Aparelho não disponível ou IMEI incorreto.");
         return;
     }
+const custo = parseFloat(estoque[index].precoCusto || 0);
+const venda = parseFloat(precoVenda || 0);
 
+const lucro = venda - custo;
+const margemLucro = custo > 0
+    ? ((lucro / custo) * 100).toFixed(1)
+    : 0;
     estoque[index].status = 'Vendido';
     estoque[index].clienteNome = cliente;
     estoque[index].precoVenda = precoVenda;
     estoque[index].dataVenda = new Date().toLocaleDateString('pt-BR');
-
+    estoque[index].lucro = lucro;
+    estoque[index].margemLucro = margemLucro;
     salvar();
     limparForm('form-venda');
     alert("💸 Venda finalizada com sucesso!");
@@ -127,7 +138,19 @@ function listar() {
             htmlEstoque += `
                 <tr>
                     <td><strong>${item.marca}</strong><br>${item.modelo}</td>
-                    <td>${item.armazenamento} | ${item.ram}<br><small>${item.cor}</small></td>
+                    <td>
+    ${item.armazenamento} | ${item.ram}<br>
+
+    <small>${item.cor}</small><br>
+
+    <small style="color:#f1c40f; font-weight:bold;">
+        Custo: R$ ${item.precoCusto || 0}
+    </small><br>
+
+    <small style="color:#2ecc71; font-weight:bold;">
+        Venda: R$ ${item.preco || 0}
+    </small>
+</td>
                     <td>${item.imei}</td>
                     <td>${item.fornecedor}</td>
                     <td>${item.data}</td>
@@ -140,19 +163,74 @@ function listar() {
         } else {
             // CORREÇÃO: Removido 'opacity' e ajustado cores para melhor leitura
             htmlVendas += `
-                <tr>
-                    <td style="border-left: 4px solid #27ae60;"><strong>${item.marca}</strong><br>${item.modelo}</td>
-                    <td>
-                        <span style="color: #2c3e50; font-weight: bold;">Cli: ${item.clienteNome}</span><br>
-                        <span style="color: #27ae60; font-weight: bold;">R$ ${item.precoVenda}</span>
-                    </td>
-                    <td><code>${item.imei}</code></td>
-                    <td>${item.dataVenda || item.data}</td>
-                    <td><span style="background: #27ae60; color: white; padding: 3px 7px; border-radius: 4px; font-size: 11px; font-weight: bold;">VENDIDO</span></td>
-                    <td>
-                        <button onclick="excluirItem(${index})" style="background:#e74c3c; color:white; border:none; border-radius:4px; padding:5px; cursor:pointer;">🗑️</button>
-                    </td>
-                </tr>
+    <tr>
+
+        <td style="border-left: 4px solid #27ae60;">
+            <strong>${item.marca}</strong><br>
+            ${item.modelo}
+        </td>
+
+        <td>
+
+            <span style="color:#ffffff; font-weight:bold;">
+                Cliente: ${item.clienteNome}
+            </span><br>
+
+            <span style="color:#3498db; font-weight:bold;">
+                Venda: R$ ${item.precoVenda || 0}
+            </span><br>
+
+            <span style="color:#f1c40f; font-weight:bold;">
+                Custo: R$ ${item.precoCusto || 0}
+            </span><br>
+
+            <span style="color:${item.lucro >= 0 ? '#2ecc71' : '#e74c3c'}; font-weight:bold;">
+                Lucro: R$ ${item.lucro || 0}
+            </span><br>
+
+            <small style="color:#bbbbbb;">
+                Margem: ${item.margemLucro || 0}%
+            </small>
+
+        </td>
+
+        <td>
+            <code>${item.imei}</code>
+        </td>
+
+        <td>
+            ${item.dataVenda || item.data}
+        </td>
+
+        <td>
+            <span style="
+                background: #27ae60;
+                color: white;
+                padding: 3px 7px;
+                border-radius: 4px;
+                font-size: 11px;
+                font-weight: bold;
+            ">
+                VENDIDO
+            </span>
+        </td>
+
+        <td>
+            <button
+                onclick="excluirItem(${index})"
+                style="
+                    background:#e74c3c;
+                    color:white;
+                    border:none;
+                    border-radius:4px;
+                    padding:5px;
+                    cursor:pointer;
+                ">
+                🗑️
+            </button>
+        </td>
+
+    </tr>
             `;
         }
     });
@@ -171,14 +249,45 @@ function salvar() {
 }
 
 function atualizarDashboard() {
+
     const hoje = new Date().toLocaleDateString('pt-BR');
-    const vendasHoje = estoque.filter(item => item.status === 'Vendido' && item.dataVenda === hoje).length;
-    const disponiveis = estoque.filter(item => item.status === 'Disponível').length;
 
-    if(document.getElementById('vendas-dia')) document.getElementById('vendas-dia').innerText = vendasHoje;
-    if(document.getElementById('estoque-baixo')) document.getElementById('estoque-baixo').innerText = disponiveis;
+    const vendasHoje = estoque.filter(item =>
+        item.status === 'Vendido' && item.dataVenda === hoje
+    ).length;
+
+    const disponiveis = estoque.filter(item =>
+        item.status === 'Disponível'
+    ).length;
+
+    const vendidos = estoque.filter(item =>
+        item.status === 'Vendido'
+    );
+
+    const lucroTotal = vendidos.reduce((acc, item) =>
+        acc + Number(item.lucro || 0), 0);
+
+    const faturamento = vendidos.reduce((acc, item) =>
+        acc + Number(item.precoVenda || 0), 0);
+
+    if(document.getElementById('vendas-dia')) {
+        document.getElementById('vendas-dia').innerText = vendasHoje;
+    }
+
+    if(document.getElementById('estoque-baixo')) {
+        document.getElementById('estoque-baixo').innerText = disponiveis;
+    }
+
+    if(document.getElementById('lucro-total')) {
+        document.getElementById('lucro-total').innerText =
+            `R$ ${lucroTotal.toFixed(2)}`;
+    }
+
+    if(document.getElementById('faturamento-total')) {
+        document.getElementById('faturamento-total').innerText =
+            `R$ ${faturamento.toFixed(2)}`;
+    }
 }
-
 function prepararEdicao(index) {
     const item = estoque[index];
     document.getElementById('edit-index').value = index;
@@ -188,6 +297,7 @@ function prepararEdicao(index) {
     document.getElementById('cor').value = item.cor;
     document.getElementById('armazenamento').value = item.armazenamento;
     document.getElementById('ram').value = item.ram;
+    document.getElementById('preco-custo').value = item.precoCusto || 0;
     document.getElementById('preco').value = item.preco;
     document.getElementById('fornecedor').value = item.fornecedor;
     document.getElementById('btn-cadastrar').innerText = "Salvar Alterações";
@@ -232,4 +342,57 @@ function limparForm(id) {
         // Garante que o index de edição seja limpo ao resetar
         if(id === 'form-cadastro') document.getElementById('edit-index').value = "";
     }
+}
+// ===============================
+// LEITOR DE IMEI VIA CÂMERA
+// ===============================
+
+const btnCamera = document.getElementById('abrir-camera');
+
+if (btnCamera) {
+
+```
+btnCamera.addEventListener('click', () => {
+
+    const readerDiv = document.getElementById('reader');
+
+    readerDiv.innerHTML = "";
+
+    const scanner = new Html5Qrcode("reader");
+
+    scanner.start(
+
+        {
+            facingMode: "environment"
+        },
+
+        {
+            fps: 10,
+            qrbox: 250
+        },
+
+        (decodedText) => {
+
+            // PREENCHE O IMEI
+            document.getElementById('imei').value = decodedText;
+
+            // FECHA A CÂMERA
+            scanner.stop();
+
+            // LIMPA O LEITOR
+            readerDiv.innerHTML = "";
+
+            alert("✅ IMEI capturado com sucesso!");
+
+        },
+
+        (errorMessage) => {
+            // IGNORA ERROS DE LEITURA CONTÍNUA
+        }
+
+    );
+
+});
+```
+
 }
