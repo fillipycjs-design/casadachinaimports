@@ -28,7 +28,16 @@
             <div class="card warning">
                 <h3>Estoque Disponível</h3>
                 <p id="estoque-baixo">0</p>
-            </div>
+</div>
+	<div class="card">
+        <h3>Lucro Total</h3>
+        <p id="lucro-total">R$ 0</p>
+      </div>
+<div class="card">
+    <h3>Faturamento</h3>
+    <p id="faturamento-total">R$ 0</p>
+</div>
+            
         </section>
 
         <div class="grid-forms">
@@ -46,7 +55,11 @@
                     <input type="text" id="cor" placeholder="Cor do aparelho" required>
 
                     <!-- IMEI VALIDADO -->
-                    <input type="text" id="imei" placeholder="IMEI (13 dígitos)" maxlength="13" required>
+                    <input type="text" id="imei" placeholder="IMEI (15 dígitos)" maxlength="15" required>
+		    <button type="button" id="abrir-camera">
+  		    📷 Escanear IMEI
+		    </button>
+<div id="reader" style="width:300px; margin-top:10px;"></div>
 
                     <label>Armazenamento:</label>
                     <select id="armazenamento">
@@ -61,7 +74,7 @@
                         <option value="8GB">8GB</option>
                         <option value="12GB">12GB</option>
                     </select>
-
+		    <input type="number" id="preco-custo" placeholder="Preço de Custo (R$)" required>
                     <input type="number" id="preco" placeholder="Preço (R$)" required>
                     <input type="text" id="fornecedor" placeholder="Fornecedor" required>
 
@@ -75,7 +88,7 @@
                 <form id="form-venda" autocomplete="off">
 
                     <!-- IMEI -->
-                    <input type="text" id="venda-imei" placeholder="IMEI do Aparelho" maxlength="13" required>
+                    <input type="text" id="venda-imei" placeholder="IMEI do Aparelho" maxlength="15" required>
 
                     <!-- AUTO PREENCHIDO -->
                     <label>Informações do Aparelho</label>
@@ -155,6 +168,8 @@
 
     </main>
 
-    <script src="app.js"></script>
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="app.js"></script>
+
 </body>
 </html>
