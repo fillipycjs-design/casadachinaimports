@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel | Casa da China Imports</title>
+
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="logo.png">
 </head>
@@ -21,114 +22,248 @@
 
         <!-- DASHBOARD -->
         <section class="dashboard">
+
             <div class="card">
                 <h3>Vendas do Dia</h3>
                 <p id="vendas-dia">0</p>
             </div>
+
             <div class="card warning">
                 <h3>Estoque Disponível</h3>
                 <p id="estoque-baixo">0</p>
-</div>
-	<div class="card">
-        <h3>Lucro Total</h3>
-        <p id="lucro-total">R$ 0</p>
-      </div>
-<div class="card">
-    <h3>Faturamento</h3>
-    <p id="faturamento-total">R$ 0</p>
-</div>
-            
+            </div>
+
+            <div class="card">
+                <h3>Lucro Total</h3>
+                <p id="lucro-total">R$ 0</p>
+            </div>
+
+            <div class="card">
+                <h3>Faturamento</h3>
+                <p id="faturamento-total">R$ 0</p>
+            </div>
+
         </section>
 
         <div class="grid-forms">
 
             <!-- CADASTRO -->
             <section class="form-section">
+
                 <h2 id="titulo-form">Cadastrar Produto</h2>
+
                 <form id="form-cadastro" autocomplete="off">
-                    
-                    <!-- CAMPO OCULTO PARA CONTROLE DE EDIÇÃO -->
+
+                    <!-- CONTROLE DE EDIÇÃO -->
                     <input type="hidden" id="edit-index" value="">
 
                     <input type="text" id="marca" placeholder="Marca" required>
+
                     <input type="text" id="modelo" placeholder="Modelo" required>
+
                     <input type="text" id="cor" placeholder="Cor do aparelho" required>
 
-                    <!-- IMEI VALIDADO -->
-                    <input type="text" id="imei" placeholder="IMEI (15 dígitos)" maxlength="15" required>
-		    <button type="button" id="abrir-camera">
-  		    📷 Escanear IMEI
-		    </button>
-<div id="reader" style="width:300px; margin-top:10px;"></div>
+                    <!-- IMEI -->
+                    <input
+                        type="text"
+                        id="imei"
+                        placeholder="IMEI (15 dígitos)"
+                        maxlength="15"
+                        required
+                    >
 
+                    <!-- BOTÃO CAMERA -->
+                    <button type="button" id="abrir-camera">
+                        📷 Escanear IMEI
+                    </button>
+
+                    <!-- LEITOR -->
+                    <div id="reader" style="width:300px; margin-top:10px;"></div>
+
+                    <!-- ARMAZENAMENTO -->
                     <label>Armazenamento:</label>
+
                     <select id="armazenamento">
                         <option value="128GB">128GB</option>
                         <option value="256GB">256GB</option>
                         <option value="512GB">512GB</option>
                     </select>
 
+                    <!-- RAM -->
                     <label>Memória RAM:</label>
+
                     <select id="ram">
                         <option value="4GB">4GB</option>
                         <option value="8GB">8GB</option>
                         <option value="12GB">12GB</option>
                     </select>
-		    <input type="number" id="preco-custo" placeholder="Preço de Custo (R$)" required>
-                    <input type="number" id="preco" placeholder="Preço (R$)" required>
-                    <input type="text" id="fornecedor" placeholder="Fornecedor" required>
 
-                    <button type="button" id="btn-cadastrar">Cadastrar</button>
+                    <!-- PREÇOS -->
+                    <input
+                        type="number"
+                        id="preco-custo"
+                        placeholder="Preço de Custo (R$)"
+                        required
+                    >
+
+                    <input
+                        type="number"
+                        id="preco"
+                        placeholder="Preço de Venda (R$)"
+                        required
+                    >
+
+                    <!-- FORNECEDOR -->
+                    <input
+                        type="text"
+                        id="fornecedor"
+                        placeholder="Fornecedor"
+                        required
+                    >
+
+                    <!-- BOTÃO -->
+                    <button type="button" id="btn-cadastrar">
+                        Cadastrar
+                    </button>
+
                 </form>
+
             </section>
 
             <!-- VENDA -->
             <section class="form-section">
+
                 <h2>Registrar Venda</h2>
+
                 <form id="form-venda" autocomplete="off">
 
                     <!-- IMEI -->
-                    <input type="text" id="venda-imei" placeholder="IMEI do Aparelho" maxlength="15" required>
+                    <input
+                        type="text"
+                        id="venda-imei"
+                        placeholder="IMEI do Aparelho"
+                        maxlength="15"
+                        required
+                    >
 
-                    <!-- AUTO PREENCHIDO -->
+                    <!-- AUTO PREENCHIMENTO -->
                     <label>Informações do Aparelho</label>
+
                     <input type="text" id="venda-marca" placeholder="Marca" disabled>
+
                     <input type="text" id="venda-modelo" placeholder="Modelo" disabled>
+
                     <input type="text" id="venda-cor" placeholder="Cor" disabled>
+
                     <input type="text" id="venda-armazenamento" placeholder="Armazenamento" disabled>
+
                     <input type="text" id="venda-ram" placeholder="Memória RAM" disabled>
 
                     <!-- CLIENTE -->
                     <label>Dados do Cliente</label>
-                    <input type="text" id="cliente-nome" placeholder="Nome Completo" required>
-                    <input type="text" id="cliente-cpf" placeholder="CPF" required>
-                    <input type="text" id="cliente-tel" placeholder="Telefone" required>
-                    <input type="text" id="venda-cidade" placeholder="Cidade" required>
+
+                    <input
+                        type="text"
+                        id="cliente-nome"
+                        placeholder="Nome Completo"
+                        required
+                    >
+
+                    <input
+                        type="text"
+                        id="cliente-cpf"
+                        placeholder="CPF"
+                        required
+                    >
+
+                    <input
+                        type="text"
+                        id="cliente-tel"
+                        placeholder="Telefone"
+                        required
+                    >
+
+                    <input
+                        type="text"
+                        id="venda-cidade"
+                        placeholder="Cidade"
+                        required
+                    >
 
                     <!-- VALOR -->
                     <label>Valor da Venda</label>
-                    <input type="number" id="venda-preco" placeholder="Preço (R$)" required>
+
+                    <input
+                        type="number"
+                        id="venda-preco"
+                        placeholder="Preço (R$)"
+                        required
+                    >
 
                     <!-- PAGAMENTO -->
                     <label>Forma de Pagamento:</label>
+
                     <select id="forma-pagamento">
                         <option value="avista">À Vista</option>
                         <option value="cartao">Cartão</option>
                     </select>
 
-                    <input type="number" id="parcelas" placeholder="Parcelas" style="display:none;">
+                    <!-- TAXA -->
+                    <label>Taxa Máxima do Cartão (%)</label>
 
-                    <button type="button" id="btn-vender">Finalizar Venda</button>
+                    <input
+                        type="number"
+                        id="taxa-maxima"
+                        value="13"
+                        min="5"
+                        max="20"
+                        step="0.1"
+                    >
+
+                    <!-- PARCELAS -->
+                    <input
+                        type="number"
+                        id="parcelas"
+                        placeholder="Parcelas"
+                        min="1"
+                        max="12"
+                        style="display:none;"
+                    >
+
+                    <!-- RESULTADO -->
+                    <div
+                        id="info-parcelamento"
+                        style="
+                            margin-top:10px;
+                            background:#222;
+                            padding:10px;
+                            border-radius:8px;
+                            font-size:14px;
+                        "
+                    ></div>
+
+                    <!-- BOTÃO -->
+                    <button type="button" id="btn-vender">
+                        Finalizar Venda
+                    </button>
+
                 </form>
+
             </section>
 
         </div>
 
-        <!-- LISTAGEM: ESTOQUE DISPONÍVEL -->
+        <!-- ESTOQUE -->
         <section class="list-section">
-            <h2 style="color: #28a745;">📦 Estoque Disponível</h2>
+
+            <h2 style="color: #28a745;">
+                📦 Estoque Disponível
+            </h2>
+
             <div class="table-container">
+
                 <table>
+
                     <thead>
                         <tr>
                             <th>Marca/Modelo</th>
@@ -139,18 +274,28 @@
                             <th>Ações</th>
                         </tr>
                     </thead>
+
                     <tbody id="lista-estoque-disponivel"></tbody>
+
                 </table>
+
             </div>
+
         </section>
 
         <br>
 
-        <!-- LISTAGEM: HISTÓRICO DE VENDAS -->
+        <!-- VENDIDOS -->
         <section class="list-section">
-            <h2 style="color: #666;">✅ Aparelhos Vendidos</h2>
+
+            <h2 style="color: #666;">
+                ✅ Aparelhos Vendidos
+            </h2>
+
             <div class="table-container">
+
                 <table>
+
                     <thead>
                         <tr>
                             <th>Marca/Modelo</th>
@@ -161,15 +306,23 @@
                             <th>Ações</th>
                         </tr>
                     </thead>
+
                     <tbody id="lista-vendidos"></tbody>
+
                 </table>
+
             </div>
+
         </section>
 
     </main>
 
-<script src="https://unpkg.com/html5-qrcode"></script>
-<script src="app.js"></script>
+    <!-- BIBLIOTECA CAMERA -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <!-- APP -->
+    <script src="app.js"></script>
 
 </body>
+
 </html>
